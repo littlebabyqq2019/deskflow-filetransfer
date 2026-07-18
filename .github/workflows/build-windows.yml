@@ -20,7 +20,7 @@ jobs:
     - name: Install Qt via aqtinstall
       run: |
         python -m pip install aqtinstall
-        python -m aqt install-qt windows desktop 6.7.0 win64_msvc2019_64 -m qtbase qttools
+        python -m aqt install-qt windows desktop 6.7.0 win64_msvc2019_64
       shell: pwsh
 
     - name: Setup vcpkg and install dependencies (excluding Qt)

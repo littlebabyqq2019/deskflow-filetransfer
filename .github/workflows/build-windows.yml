@@ -17,9 +17,10 @@ jobs:
     - name: Setup MSVC
       uses: ilammy/msvc-dev-cmd@v1
 
-    - name: Install Qt via Chocolatey
+    - name: Install Qt via aqtinstall
       run: |
-        choco install qt6 -y --version=6.7.0
+        python -m pip install aqtinstall
+        python -m aqt install-qt windows desktop 6.7.0 win64_msvc2019_64 -m qtbase qttools
       shell: pwsh
 
     - name: Setup vcpkg and install dependencies (excluding Qt)
@@ -33,7 +34,7 @@ jobs:
 
     - name: Configure CMake
       run: |
-        $env:CMAKE_PREFIX_PATH = "C:\Qt\6.7.0\msvc2019_64"
+        $env:CMAKE_PREFIX_PATH = "${{ github.workspace }}\6.7.0\msvc2019_64"
         cmake -B build -S . `
           -G "Ninja" `
           -DCMAKE_BUILD_TYPE=Release `

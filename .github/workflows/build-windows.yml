@@ -21,7 +21,7 @@ jobs:
       run: |
         git clone https://github.com/microsoft/vcpkg.git
         .\vcpkg\bootstrap-vcpkg.bat
-        .\vcpkg\vcpkg install qt6-base:x64-windows qt6-tools:x64-windows openssl:x64-windows gtest:x64-windows
+        .\vcpkg\vcpkg install qtbase:x64-windows qttools:x64-windows openssl:x64-windows gtest:x64-windows
       shell: pwsh
 
     - name: Configure CMake

@@ -17,17 +17,23 @@ jobs:
     - name: Setup MSVC
       uses: ilammy/msvc-dev-cmd@v1
 
-    - name: Setup vcpkg and install dependencies
+    - name: Install Qt via Chocolatey
+      run: |
+        choco install qt6 -y --version=6.7.0
+      shell: pwsh
+
+    - name: Setup vcpkg and install dependencies (excluding Qt)
       run: |
         git clone https://github.com/microsoft/vcpkg.git
         .\vcpkg\bootstrap-vcpkg.bat
-        .\vcpkg\vcpkg install qtbase:x64-windows qttools:x64-windows openssl:x64-windows gtest:x64-windows
+        .\vcpkg\vcpkg install openssl:x64-windows gtest:x64-windows
       shell: cmd
       env:
         VCPKG_DEFAULT_TRIPLET: x64-windows
 
     - name: Configure CMake
       run: |
+        $env:CMAKE_PREFIX_PATH = "C:\Qt\6.7.0\msvc2019_64"
         cmake -B build -S . `
           -G "Ninja" `
           -DCMAKE_BUILD_TYPE=Release `

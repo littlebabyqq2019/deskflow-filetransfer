@@ -18,9 +18,10 @@ jobs:
       uses: microsoft/setup-msbuild@v2
 
     - name: Setup vcpkg
-      uses: lukka/run-vcpkg@v11
-      with:
-        vcpkgGitCommitId: 'd5ec528843d29e3a52d745a64b469f810b2cedbf'
+      run: |
+        git clone https://github.com/microsoft/vcpkg.git
+        .\vcpkg\bootstrap-vcpkg.bat
+      shell: pwsh
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
@@ -28,9 +29,10 @@ jobs:
         version: '6.7.3'
         host: 'windows'
         target: 'desktop'
-        arch: 'win64_msvc2019_64'
+        arch: 'win64_msvc2022_64'
         modules: 'qtbase qttools'
         cache: true
+        setup-python: false
 
     - name: Configure CMake
       run: |

@@ -1,0 +1,66 @@
+name: Windows Build (Stage 1 Verification)
+
+on:
+  push:
+    branches: [ master, main, feature/* ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup MSVC
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Setup vcpkg
+      uses: lukka/run-vcpkg@v11
+      with:
+        vcpkgGitCommitId: 'd5ec528843d29e3a52d745a64b469f810b2cedbf'
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: '6.7.3'
+        host: 'windows'
+        target: 'desktop'
+        arch: 'win64_msvc2019_64'
+        modules: 'qtbase qttools'
+        cache: true
+
+    - name: Configure CMake
+      run: |
+        cmake -B build -S . `
+          -G "Visual Studio 17 2022" -A x64 `
+          -DCMAKE_BUILD_TYPE=Release `
+          -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
+      shell: pwsh
+
+    - name: Build
+      run: cmake --build build --config Release -j
+      shell: pwsh
+
+    - name: Run basic smoke test
+      run: |
+        if (Test-Path "build\src\apps\deskflow-core\Release\deskflow-core.exe") {
+          Write-Host "✓ deskflow-core.exe built successfully"
+          & build\src\apps\deskflow-core\Release\deskflow-core.exe --help
+        } else {
+          Write-Error "deskflow-core.exe not found"
+          exit 1
+        }
+      shell: pwsh
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      if: success()
+      with:
+        name: deskflow-windows-stage1
+        path: |
+          build/src/apps/deskflow-core/Release/*.exe
+          build/src/apps/deskflow-gui/Release/*.exe
+        retention-days: 7

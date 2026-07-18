@@ -1,0 +1,42 @@
+# Build directories
+build/
+Build/
+out/
+cmake-build-*/
+.vs/
+.vscode/
+*.user
+*.suo
+
+# vcpkg
+vcpkg_installed/
+
+# Compiled binaries
+*.exe
+*.dll
+*.so
+*.dylib
+*.a
+*.lib
+*.pdb
+*.obj
+*.o
+
+# Qt generated
+*_autogen/
+moc_*.cpp
+ui_*.h
+qrc_*.cpp
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+*.swp
+*.swo
+*~
+.idea/

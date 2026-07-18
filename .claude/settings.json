@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(where cmake *)",
+      "Bash(cmake --version)",
+      "Bash(where msbuild *)",
+      "Bash(where cl *)",
+      "Bash(where g++)",
+      "Bash(where clang++)",
+      "Bash(ls \"/c/Program Files/Microsoft Visual Studio\" 2>&1 | head -5 ; ls \"/c/Program Files \\(x86\\)/Microsoft Visual Studio\" 2>&1 | head -5 ; ls \"/c/Qt\" 2>&1 | head -5)",
+      "Read(//c/Program Files/**)",
+      "Read(//c/Program Files \\(x86\\)/Microsoft Visual Studio/**)",
+      "Read(//c//**)",
+      "Bash(where python *)",
+      "Bash(git init *)",
+      "Bash(git config *)"
+    ]
+  }
+}

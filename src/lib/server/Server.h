@@ -16,6 +16,7 @@
 #include "deskflow/KeyTypes.h"
 #include "deskflow/MouseTypes.h"
 #include "deskflow/FileTransferManager.h"
+#include "deskflow/FileTransferProtocol.h"
 #include "server/Config.h"
 
 #include <climits>
@@ -330,6 +331,10 @@ private:
 
   // event processing
   void onClipboardChanged(const BaseClientProxy *sender, ClipboardID id, uint32_t seqNum);
+  void onIncomingDragInfo(
+      BaseClientProxy *sender, uint32_t transferId, uint16_t fileCount, uint64_t totalSize, const std::string &manifest
+  );
+  void onIncomingFileChunk(BaseClientProxy *sender, uint8_t mark, const std::string &data);
   void onScreensaver(bool activated);
   void onKeyDown(KeyID, KeyModifierMask, KeyButton, const std::string &, const char *screens);
   void onKeyUp(KeyID, KeyModifierMask, KeyButton, const char *screens);

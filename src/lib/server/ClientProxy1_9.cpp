@@ -169,12 +169,13 @@ void ClientProxy1_9::handleDragInfo()
     LOG_WARN("failed to parse DDRG from \"%s\"", getName().c_str());
     return;
   }
+  uint64_t totalSize = (static_cast<uint64_t>(totalHi) << 32) | totalLo;
   LOG_DEBUG(
       "recv drag info from \"%s\": count=%u xferId=%u totalSize=%llu manifestBytes=%zu", getName().c_str(),
       static_cast<unsigned>(fileCount), static_cast<unsigned>(transferId),
-      (static_cast<unsigned long long>(totalHi) << 32) | totalLo, manifest.size()
+      static_cast<unsigned long long>(totalSize), manifest.size()
   );
-  // Stage 3: forward to Server::onIncomingDragInfo(this, transferId, count, total, manifest)
+  getServer()->onIncomingDragInfo(this, transferId, fileCount, totalSize, manifest);
 }
 
 void ClientProxy1_9::handleFileTransferMeta()
@@ -211,7 +212,7 @@ void ClientProxy1_9::handleFileChunk()
   LOG_DEBUG(
       "recv file chunk from \"%s\": mark=%u bytes=%zu", getName().c_str(), static_cast<unsigned>(mark), data.size()
   );
-  // Stage 3: FileTransferManager::onChunk(mark, data)
+  getServer()->onIncomingFileChunk(this, mark, data);
 }
 
 void ClientProxy1_9::handleDropTargetInfo()

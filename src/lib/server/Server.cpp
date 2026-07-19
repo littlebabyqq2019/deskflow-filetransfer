@@ -1502,6 +1502,48 @@ void Server::onClipboardChanged(const BaseClientProxy *sender, ClipboardID id, u
   m_active->setClipboard(id, &clipboard.m_clipboard);
 }
 
+void Server::onIncomingDragInfo(
+    BaseClientProxy *sender, uint32_t transferId, uint16_t fileCount, uint64_t totalSize, const std::string &manifest
+)
+{
+  if (!m_clientSet.contains(sender)) {
+    return;
+  }
+
+  deskflow::DragInformation dragInfo;
+  if (!deskflow::FileTransferProtocol::deserializeDragInfo(manifest, fileCount, dragInfo)) {
+    LOG_WARN("failed to deserialize drag info from \"%s\"", getName(sender).c_str());
+    return;
+  }
+
+  LOG_INFO(
+      "received drag info from \"%s\": %zu files, total %llu bytes", getName(sender).c_str(), dragInfo.getFileCount(),
+      static_cast<unsigned long long>(dragInfo.getTotalSize())
+  );
+
+  if (!m_fileTransferManager.onDragInfo(dragInfo)) {
+    LOG_WARN("file transfer manager rejected drag info");
+  }
+}
+
+void Server::onIncomingFileChunk(BaseClientProxy *sender, uint8_t mark, const std::string &data)
+{
+  if (!m_clientSet.contains(sender)) {
+    return;
+  }
+
+  deskflow::FileChunk chunk;
+  if (!deskflow::FileTransferProtocol::deserializeFileChunk(data, chunk)) {
+    LOG_WARN("failed to deserialize file chunk from \"%s\"", getName(sender).c_str());
+    return;
+  }
+
+  if (!m_fileTransferManager.onFileChunk(chunk)) {
+    LOG_WARN("file transfer manager rejected chunk: idx=%u offset=%llu size=%zu",
+        chunk.getFileIndex(), static_cast<unsigned long long>(chunk.getOffset()), chunk.getSize());
+  }
+}
+
 void Server::onScreensaver(bool activated)
 {
   LOG_DEBUG("onScreenSaver %s", activated ? "activated" : "deactivated");

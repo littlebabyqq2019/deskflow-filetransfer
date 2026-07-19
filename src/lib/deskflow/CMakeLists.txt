@@ -46,6 +46,8 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   FileChunk.h
   FileTransferManager.cpp
   FileTransferManager.h
+  FileTransferProtocol.cpp
+  FileTransferProtocol.h
   IApp.h
   IClient.h
   IClipboard.cpp

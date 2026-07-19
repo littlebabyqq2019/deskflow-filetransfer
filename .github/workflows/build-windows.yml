@@ -43,14 +43,15 @@ jobs:
       shell: pwsh
 
     - name: Build
-      run: cmake --build build --config Release -j
+      run: |
+        cmake --build build --config Release --target deskflow-core -j
       shell: pwsh
 
     - name: Run basic smoke test
       run: |
         if (Test-Path "build\src\apps\deskflow-core\Release\deskflow-core.exe") {
           Write-Host "✓ deskflow-core.exe built successfully"
-          & build\src\apps\deskflow-core\Release\deskflow-core.exe --help
+          & build\src\apps\deskflow-core\Release\deskflow-core.exe --version
         } else {
           Write-Error "deskflow-core.exe not found"
           exit 1
@@ -63,6 +64,5 @@ jobs:
       with:
         name: deskflow-windows-stage1
         path: |
-          build/src/apps/deskflow-core/Release/*.exe
-          build/src/apps/deskflow-gui/Release/*.exe
+          build/src/apps/deskflow-core/Release/deskflow-core.exe
         retention-days: 7

@@ -15,6 +15,7 @@
 #include "deskflow/ClipboardTypes.h"
 #include "deskflow/KeyTypes.h"
 #include "deskflow/MouseTypes.h"
+#include "deskflow/FileTransferManager.h"
 #include "server/Config.h"
 
 #include <climits>
@@ -306,6 +307,10 @@ private:
   void handleShapeChanged(BaseClientProxy *client);
   void handleClipboardGrabbed(const Event &event, BaseClientProxy *client);
   void handleClipboardChanged(const Event &event, BaseClientProxy *client);
+  void handleDragInfo(const Event &event, BaseClientProxy *client);
+  void handleFileTransfer(const Event &event, BaseClientProxy *client);
+  void handleFileTransferDone(const Event &event, BaseClientProxy *client);
+  void handleFileTransferError(const Event &event, BaseClientProxy *client);
   void handleKeyDownEvent(const Event &event);
   void handleKeyUpEvent(const Event &event);
   void handleKeyRepeatEvent(const Event &event);
@@ -467,4 +472,7 @@ private:
   bool m_defaultLockToScreenState = false;
   bool m_disableLockToScreen = false;
   bool m_enableClipboard = true;
+
+  //! File transfer manager (protocol v1.9+)
+  deskflow::FileTransferManager m_fileTransferManager;
 };

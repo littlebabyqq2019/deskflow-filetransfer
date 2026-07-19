@@ -1204,6 +1204,48 @@ void Server::handleClipboardChanged(const Event &event, BaseClientProxy *client)
   onClipboardChanged(client, info->m_id, info->m_sequenceNumber);
 }
 
+void Server::handleDragInfo(const Event &event, BaseClientProxy *client)
+{
+  if (!m_clientSet.contains(client)) {
+    return;
+  }
+
+  // TODO: Parse DragInformation from event data in stage 3
+  // For now, just acknowledge we received it
+  LOG_DEBUG("received drag info from client");
+}
+
+void Server::handleFileTransfer(const Event &event, BaseClientProxy *client)
+{
+  if (!m_clientSet.contains(client)) {
+    return;
+  }
+
+  // TODO: Parse FileChunk from event data in stage 3
+  // For now, just acknowledge we received it
+  LOG_DEBUG("received file transfer chunk from client");
+}
+
+void Server::handleFileTransferDone(const Event &event, BaseClientProxy *client)
+{
+  if (!m_clientSet.contains(client)) {
+    return;
+  }
+
+  LOG_DEBUG("file transfer completed");
+  m_fileTransferManager.onTransferDone();
+}
+
+void Server::handleFileTransferError(const Event &event, BaseClientProxy *client)
+{
+  if (!m_clientSet.contains(client)) {
+    return;
+  }
+
+  LOG_DEBUG("file transfer error");
+  m_fileTransferManager.onTransferError("Transfer failed");
+}
+
 void Server::handleKeyDownEvent(const Event &event)
 {
   const auto *info = static_cast<IPlatformScreen::KeyInfo *>(event.getData());

@@ -49,9 +49,9 @@ jobs:
 
     - name: Run basic smoke test
       run: |
-        if (Test-Path "build\src\apps\deskflow-core\Release\deskflow-core.exe") {
+        if (Test-Path "build\bin\deskflow-core.exe") {
           Write-Host "✓ deskflow-core.exe built successfully"
-          & build\src\apps\deskflow-core\Release\deskflow-core.exe --version
+          & build\bin\deskflow-core.exe --version
         } else {
           Write-Error "deskflow-core.exe not found"
           exit 1
@@ -64,5 +64,5 @@ jobs:
       with:
         name: deskflow-windows-stage1
         path: |
-          build/src/apps/deskflow-core/Release/deskflow-core.exe
+          build/bin/deskflow-core.exe
         retention-days: 7
